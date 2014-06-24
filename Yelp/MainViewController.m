@@ -28,6 +28,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 @property(strong, nonatomic) NSString* keyword;
 
 @property (assign, nonatomic) BOOL hasDeal;
+@property (assign, nonatomic) BOOL cancelSearch;
 
 @property (strong, nonatomic) NSArray* categoryNameArray;
 @end
@@ -57,6 +58,7 @@ BOOL categoryCheckArray[10];
     // Do any additional setup after loading the view from its nib.
     
     self.hasDeal = NO;
+    self.cancelSearch = NO;
     self.keyword = @"Chinese";
     
     UINavigationBar* naviBar = [[self navigationController] navigationBar];
@@ -67,11 +69,9 @@ BOOL categoryCheckArray[10];
     self.searchBar.delegate = self;
     self.searchBar.text = self.keyword;
     
-    UIButton* filterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 25)];
-    [filterButton setTitle:@"Filter" forState:UIControlStateNormal];
-    [filterButton addTarget:self action:@selector(filterButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStyleBordered target:self action:@selector(filterButtonTouchUpInside)];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:filterButton];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Search" style:UIBarButtonItemStyleBordered target:self action:nil];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -83,7 +83,8 @@ BOOL categoryCheckArray[10];
 {
     [super viewWillAppear:animated];
     
-    [self searchWithKeyword];
+    if (!self.cancelSearch)
+        [self searchWithKeyword];
 
 }
 
@@ -210,5 +211,9 @@ BOOL categoryCheckArray[10];
     FiltersViewController* fvc = [[FiltersViewController alloc] init];
     fvc.delegate = self;
     [self.navigationController pushViewController:fvc animated:YES];
+}
+
+-(void) cancelButtonHit{
+    self.cancelSearch = YES;
 }
 @end

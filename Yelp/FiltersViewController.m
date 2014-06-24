@@ -174,4 +174,5 @@ BOOL categorySectionCollapsed;
     else  [self.delegate setDeal:NO inFiltersController:self];
 }
 
+
 @end
